@@ -10,16 +10,66 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var goButton: UIButton!
+    @IBOutlet weak var imgView: UIImageView!
+    
+    var accountName: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tap))
+        tapRecognizer.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapRecognizer)
+        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(notification:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func goButtonTapped() {
+        textField.resignFirstResponder()
+        imgView.image = nil
+        IGAvaParser.parseInstaAvatarFor(accountName: accountName) { result, error in
+            if let result = result {
+                print("AVATAR: \(result)")
+                if let url = URL(string: result) {
+                    do {
+                        let imageData = try Data(contentsOf: url)
+                        self.imgView.image = UIImage(data: imageData)
+                    } catch let error {
+                        print("ERROR: \(error.localizedDescription)")
+                        self.showAlertWithErrorMessage(error.localizedDescription, completion: {} )
+                    }
+                }
+            } else {
+                print("ERROR: \(error ?? "unknown error")")
+                self.showAlertWithErrorMessage(error ?? "unknown error", completion: {} )
+            }
+        }
     }
-
-
+    
+    @objc func tap() {
+        textField.resignFirstResponder()
+    }
+    
+    @objc func textFieldDidChange(notification: NSNotification) {
+        if let textField = notification.object as? UITextField {
+            accountName = textField.text ?? ""
+        }
+        goButton.isEnabled = !accountName.isEmpty
+    }
+    
 }
+
+
+
+
+
+
+
+
+
 

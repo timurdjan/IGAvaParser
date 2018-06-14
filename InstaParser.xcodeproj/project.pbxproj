@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA3156BE20D2722A000483AF /* IGAvaParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3156BD20D2722A000483AF /* IGAvaParser.swift */; };
+		BA3156C020D272DB000483AF /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3156BF20D272DB000483AF /* UIViewController+Alert.swift */; };
 		BAFD6E4420A457F4000CB38C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAFD6E4320A457F4000CB38C /* AppDelegate.swift */; };
 		BAFD6E4620A457F4000CB38C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAFD6E4520A457F4000CB38C /* ViewController.swift */; };
 		BAFD6E4920A457F4000CB38C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAFD6E4720A457F4000CB38C /* Main.storyboard */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BA3156BD20D2722A000483AF /* IGAvaParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IGAvaParser.swift; sourceTree = "<group>"; };
+		BA3156BF20D272DB000483AF /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		BAFD6E4020A457F4000CB38C /* InstaParser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaParser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAFD6E4320A457F4000CB38C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAFD6E4520A457F4000CB38C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -55,6 +59,8 @@
 			isa = PBXGroup;
 			children = (
 				BAFD6E4320A457F4000CB38C /* AppDelegate.swift */,
+				BA3156BD20D2722A000483AF /* IGAvaParser.swift */,
+				BA3156BF20D272DB000483AF /* UIViewController+Alert.swift */,
 				BAFD6E4520A457F4000CB38C /* ViewController.swift */,
 				BAFD6E4720A457F4000CB38C /* Main.storyboard */,
 				BAFD6E4A20A457F6000CB38C /* Assets.xcassets */,
@@ -135,8 +141,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA3156BE20D2722A000483AF /* IGAvaParser.swift in Sources */,
 				BAFD6E4620A457F4000CB38C /* ViewController.swift in Sources */,
 				BAFD6E4420A457F4000CB38C /* AppDelegate.swift in Sources */,
+				BA3156C020D272DB000483AF /* UIViewController+Alert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +291,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7TA3PVP82C;
 				INFOPLIST_FILE = InstaParser/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -301,6 +310,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7TA3PVP82C;
 				INFOPLIST_FILE = InstaParser/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
