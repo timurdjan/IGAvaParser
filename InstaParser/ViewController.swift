@@ -34,19 +34,23 @@ class ViewController: UIViewController {
         imgView.image = nil
         IGAvaParser.parseInstaAvatarFor(accountName: accountName) { result, error in
             if let result = result {
-                print("AVATAR: \(result)")
-                if let url = URL(string: result) {
-                    do {
-                        let imageData = try Data(contentsOf: url)
-                        self.imgView.image = UIImage(data: imageData)
-                    } catch let error {
-                        print("ERROR: \(error.localizedDescription)")
-                        self.showAlertWithErrorMessage(error.localizedDescription, completion: {} )
-                    }
-                }
+                self.process(result)
             } else {
-                print("ERROR: \(error ?? "unknown error")")
                 self.showAlertWithErrorMessage(error ?? "unknown error", completion: {} )
+                print("ERROR: \(error ?? "unknown error")")
+            }
+        }
+    }
+    
+    private func process(_ result: String) {
+        print("AVATAR: \(result)")
+        if let url = URL(string: result) {
+            do {
+                let imageData = try Data(contentsOf: url)
+                self.imgView.image = UIImage(data: imageData)
+            } catch let error {
+                print("ERROR: \(error.localizedDescription)")
+                showAlertWithErrorMessage(error.localizedDescription, completion: {} )
             }
         }
     }

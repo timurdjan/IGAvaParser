@@ -10,66 +10,69 @@ import Foundation
 
 class IGAvaParser {
     
-    public static func parseInstaAvatarFor(accountName name: String, completion: @escaping ((String?, String?) -> Void)) {
-        
-        var errorString: String?
-        let baseUrl = "https://instagram.com/\(name)/"
-        let errorAccountNotFound = "Error: \(name) seems to be invalid account name. Check and try."
-        
-        func getUserId() -> (String?, String?) {
-            guard let url = URL(string: baseUrl) else {
-                print("Error: Invalid URL")
-                return (nil, "Invalid URL")
-            }
-            
-            var htmlStr: String = ""
-            do {
-                htmlStr = try String(contentsOf: url, encoding: .ascii)
-            } catch let error {
-                print("Error: \(error)")
-                return (nil, error.localizedDescription)
-            }
-            
-            let start = "<script type=\"text/javascript\">window._sharedData = "
-            let startIndex = htmlStr.range(of: start)?.upperBound
-            htmlStr = String(htmlStr[startIndex!...])
-            let end = "</script>"
-            let endIndex = htmlStr.range(of: end)?.lowerBound
-            htmlStr = String(htmlStr[..<endIndex!])
-            let extEnd = "}"
-            let extEndIndex = htmlStr.range(of: extEnd, options: .backwards)?.upperBound
-            htmlStr = String(htmlStr[..<extEndIndex!])
-            
-            var rawJson: [String: Any]?
-            if let data = htmlStr.data(using: .utf8) {
-                do {
-                    rawJson = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-            
-            guard let json = rawJson, let entryData = json["entry_data"] as? [String: Any],
-                let profilePage = entryData["ProfilePage"] as? [[String: Any]] else {
-                    print("Profile page not found")
-                    return (nil, "Profile page not found")
-            }
-            
-            var id: String?
-            profilePage.forEach {
-                if let dict = $0["graphql"] as? [String: Any], let user = dict["user"] as? [String: Any], let userId = user["id"] as? String {
-                    id = userId
-                    return
-                } else {
-                    return
-                }
-            }
-            
-            return (id, errorString)
+    private static var errorString: String?
+    private static let baseUrl = "https://instagram.com/"
+    
+    private static func errorAccountNotFound(name: String) -> String {
+        return "Error: \(name) seems to be invalid account name. Check and try."
+    }
+    
+    private static func getUserId(name: String) -> (String?, String?) {
+        guard let url = URL(string: "\(baseUrl)\(name)/") else {
+            print("Error: Invalid URL")
+            return (nil, "Invalid URL")
         }
         
-        let idWithSomeError = getUserId()
-        let errorAnswer = getUserId().1
+        var htmlStr: String = ""
+        do {
+            htmlStr = try String(contentsOf: url, encoding: .ascii)
+        } catch let error {
+            print("Error: \(error)")
+            return (nil, error.localizedDescription)
+        }
+        
+        let start = "<script type=\"text/javascript\">window._sharedData = "
+        let startIndex = htmlStr.range(of: start)?.upperBound
+        htmlStr = String(htmlStr[startIndex!...])
+        let end = "</script>"
+        let endIndex = htmlStr.range(of: end)?.lowerBound
+        htmlStr = String(htmlStr[..<endIndex!])
+        let extEnd = "}"
+        let extEndIndex = htmlStr.range(of: extEnd, options: .backwards)?.upperBound
+        htmlStr = String(htmlStr[..<extEndIndex!])
+        
+        var rawJson: [String: Any]?
+        if let data = htmlStr.data(using: .utf8) {
+            do {
+                rawJson = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
+        guard let json = rawJson, let entryData = json["entry_data"] as? [String: Any],
+            let profilePage = entryData["ProfilePage"] as? [[String: Any]] else {
+                print("Profile page not found")
+                return (nil, "Profile page not found")
+        }
+        
+        var id: String?
+        profilePage.forEach {
+            if let dict = $0["graphql"] as? [String: Any], let user = dict["user"] as? [String: Any], let userId = user["id"] as? String {
+                id = userId
+                return
+            } else {
+                return
+            }
+        }
+        
+        return (id, errorString)
+    }
+    
+    public static func parseInstaAvatarFor(accountName name: String, completion: @escaping ((String?, String?) -> Void)) {
+        
+        let idWithSomeError = getUserId(name: name)
+        let errorAnswer = idWithSomeError.1
         guard let id = idWithSomeError.0, let url = URL(string: "https://i.instagram.com/api/v1/users/\(id)/info/") else {
             DispatchQueue.main.async { completion(nil, errorAnswer) }
             return
